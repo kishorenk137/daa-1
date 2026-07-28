@@ -1,0 +1,94 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPxbR6L0swXx/P2qUCm/Ci6",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/kishorenk137/daa-1/blob/main/daa%203%20extra%20problems%201\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fVBZ9-fU05LQ",
+        "outputId": "72e659a7-8a59-422b-cbeb-fb0fa6325e3b"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Edges in MST: ['A-C (2)', 'C-E (3)', 'A-B (4)', 'E-F (6)', 'D-E (7)']\n",
+            "Total connection cost: 22\n"
+          ]
+        }
+      ],
+      "source": [
+        "def kruskal_mst(edges, num_vertices):\n",
+        "    # Sort edges by weight\n",
+        "    edges.sort(key=lambda x: x[2])\n",
+        "\n",
+        "    # Initialize disjoint set\n",
+        "    parent = {i: i for i in range(num_vertices)}\n",
+        "\n",
+        "    def find(i):\n",
+        "        if parent[i] == i:\n",
+        "            return i\n",
+        "        return find(parent[i])\n",
+        "\n",
+        "    def union(i, j):\n",
+        "        root_i = find(i)\n",
+        "        root_j = find(j)\n",
+        "        parent[root_i] = root_j\n",
+        "\n",
+        "    mst = []\n",
+        "    total_cost = 0\n",
+        "\n",
+        "    # Map cities to array indices\n",
+        "    city_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5}\n",
+        "\n",
+        "    for u, v, weight in edges:\n",
+        "        u_idx, v_idx = city_map[u], city_map[v]\n",
+        "        if find(u_idx) != find(v_idx):\n",
+        "            union(u_idx, v_idx)\n",
+        "            mst.append(f\"{u}-{v} ({weight})\")\n",
+        "            total_cost += weight\n",
+        "\n",
+        "    return mst, total_cost\n",
+        "\n",
+        "# Define network edges\n",
+        "network_edges = [\n",
+        "    ('A', 'B', 4), ('A', 'C', 2), ('B', 'C', 5), ('B', 'D', 10),\n",
+        "    ('C', 'E', 3), ('D', 'E', 7), ('D', 'F', 8), ('E', 'F', 6)\n",
+        "]\n",
+        "\n",
+        "mst_edges, min_cost = kruskal_mst(network_edges, 6)\n",
+        "print(\"Edges in MST:\", mst_edges)\n",
+        "print(\"Total connection cost:\", min_cost)\n"
+      ]
+    }
+  ]
+}
