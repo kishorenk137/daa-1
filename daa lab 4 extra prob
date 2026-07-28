@@ -1,0 +1,71 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPD4FyaaBbDwF8bhUPGbZ0t",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/kishorenk137/daa-1/blob/main/daa%20lab%204%20extra%20prob\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 3,
+      "metadata": {
+        "id": "EKfTsf3n4NE4"
+      },
+      "outputs": [],
+      "source": [
+        "import heapq\n",
+        "\n",
+        "def dijkstra_prefer_fewer_hops(graph, start, end):\n",
+        "    # Min-heap format: (total_weight, hop_count, current_node, path)\n",
+        "    queue = [(0, 0, start, [start])]\n",
+        "\n",
+        "    # Tracks the best observed tracking parameters: node -> (weight, hops)\n",
+        "    best_states = {start: (0, 0)}\n",
+        "\n",
+        "    while queue:\n",
+        "        weight, hops, node, path = heapq.heappop(queue)\n",
+        "\n",
+        "        # Target reached optimally due to priority queue ordering\n",
+        "        if node == end:\n",
+        "            return weight, hops, path\n",
+        "\n",
+        "        # Skip if we already found a strictly better state for this node\n",
+        "        if (weight, hops) > best_states.get(node, (float('inf'), float('inf'))):\n",
+        "            continue\n",
+        "\n",
+        "        for neighbor, edge_weight in graph.get(node, []):\n",
+        "            next_weight = weight + edge_weight\n",
+        "            next_hops = hops + 1\n",
+        "            next_state = (next_weight, next_hops)\n",
+        "\n",
+        "            # Tie-breaker logic: True if lower weight, OR same weight with fewer hops\n",
+        "            if next_state < best_states.get(neighbor, (float('inf'), float('inf'))):\n",
+        "                best_states[neighbor] = next_state\n",
+        "                heapq.heappush(queue, (next_weight, next_hops, neighbor, path + [neighbor]))\n",
+        "\n",
+        "    return float('inf'), float('inf'), []\n"
+      ]
+    }
+  ]
+}
