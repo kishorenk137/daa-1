@@ -1,0 +1,90 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNE4y9peP7pa5SGnh7+W1k1",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/kishorenk137/daa-1/blob/main/daa%20lab%205%20extra%202\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 2,
+      "metadata": {
+        "id": "0GdUNAG753O1"
+      },
+      "outputs": [],
+      "source": [
+        "import random\n",
+        "\n",
+        "def quickselect_iterative(arr, k_1_indexed):\n",
+        "    \"\"\"\n",
+        "    Finds the k-th smallest element in an unsorted list iteratively.\n",
+        "    Uses O(1) auxiliary space and protects against stack overflow.\n",
+        "    \"\"\"\n",
+        "    if not 1 <= k_1_indexed <= len(arr):\n",
+        "        raise ValueError(\"k value is out of array bounds.\")\n",
+        "\n",
+        "    # Work on a copy to keep the original array unchanged\n",
+        "    working_arr = arr.copy()\n",
+        "\n",
+        "    # Convert 1-based k value to 0-based target index\n",
+        "    target_idx = k_1_indexed - 1\n",
+        "    left, right = 0, len(working_arr) - 1\n",
+        "\n",
+        "    while left <= right:\n",
+        "        if left == right:\n",
+        "            return working_arr[left]\n",
+        "\n",
+        "        # Choose a random pivot index and partition the current range\n",
+        "        pivot_idx = random.randint(left, right)\n",
+        "        pivot_idx = partition(working_arr, left, right, pivot_idx)\n",
+        "\n",
+        "        # Binary-search-like decision boundary\n",
+        "        if pivot_idx == target_idx:\n",
+        "            return working_arr[pivot_idx]\n",
+        "        elif pivot_idx > target_idx:\n",
+        "            right = pivot_idx - 1  # Narrow search window to the left partition\n",
+        "        else:\n",
+        "            left = pivot_idx + 1   # Narrow search window to the right partition\n",
+        "\n",
+        "    return working_arr[left]\n",
+        "\n",
+        "def partition(arr, left, right, pivot_index):\n",
+        "    pivot_value = arr[pivot_index]\n",
+        "    # Swap pivot out of the way to the right end safely\n",
+        "    arr[pivot_index], arr[right] = arr[right], arr[pivot_index]\n",
+        "\n",
+        "    store_index = left\n",
+        "    for i in range(left, right):\n",
+        "        if arr[i] < pivot_value:\n",
+        "            arr[i], arr[store_index] = arr[store_index], arr[i]\n",
+        "            store_index += 1\n",
+        "\n",
+        "    # Place pivot back into its finalized, sorted position\n",
+        "    arr[right], arr[store_index] = arr[store_index], arr[right]\n",
+        "    return store_index\n",
+        "\n"
+      ]
+    }
+  ]
+}
